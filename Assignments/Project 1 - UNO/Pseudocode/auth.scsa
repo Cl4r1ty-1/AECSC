@@ -1,0 +1,15 @@
+MODULE authenticate(filename)
+    user_db = OPEN_READ(filename)
+    users = []
+    WHILE NOT user_db.end_of_file()
+        user_record = user_db.READLINE()
+        users.APPEND(user_record)
+    END WHILE
+    CLOSE(filename)
+
+    INPUT(name)
+    IF name IN users
+        RETURN "Authenticated"
+    ELSE
+        RETURN "Not Authorized"
+END authenticate
