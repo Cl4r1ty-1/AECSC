@@ -1,3 +1,7 @@
 /blowfish.py
 /compass.txt
 /Assignments/*.docx
+/scsa-pseudocode/
+/scsa-pseudocode/*
+/scsa-pseudocode/package-lock.json
+*.tmp
