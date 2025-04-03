@@ -5,3 +5,4 @@
 /scsa-pseudocode/*
 /scsa-pseudocode/package-lock.json
 *.tmp
+*.pdf
