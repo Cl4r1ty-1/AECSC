@@ -1,0 +1,5 @@
+MODULE play_game(deck)
+    play_order = get_play_order()
+    shuffle(deck)
+    played_card = deck[0]
+    check_card(played_card)

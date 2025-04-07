@@ -1,0 +1,19 @@
+MODULE main_menu()
+    OUTPUT("Welcome to UNO!")
+    OUTPUT()
+    OUTPUT("Please select an option")
+    OUTPUT("1. Play game")
+    OUTPUT("2. Display scores")
+    OUTPUT("3. Exit")
+
+    INPUT(option)
+    IF option == 1 THEN
+        play_game()
+    ELSE IF option == 2 THEN
+        get_scores()
+    ELSE IF option == 3 THEN
+        exit()
+    ELSE
+        OUTPUT("Invalid option!")
+    END IF
+END main_menu

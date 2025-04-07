@@ -1,0 +1,15 @@
+MODULE get_scores()
+    save_file = OPEN_CSV('uno_save.csv')
+    scores = {}
+    WHILE NOT save_file.EOF()
+        player = save_file.READLINE()
+        scores[player[0]] = [player[1], player[2]]
+    END WHILE
+    CLOSE(save_file)
+
+    OUTPUT("Player, Rounds won, Score")
+    FOR player, score_data IN scores.items
+        OUTPUT(player, score_data[0], score_data[1])
+        OUTPUT()
+    END FOR
+END get_scores

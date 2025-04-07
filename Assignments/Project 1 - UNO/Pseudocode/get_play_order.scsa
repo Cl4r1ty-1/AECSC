@@ -1,0 +1,9 @@
+MODULE get_play_order()
+    players = []
+    REPEAT
+        INPUT(player_name)
+        players.APPEND(player_name)
+    UNTIL NOT player_name
+    shuffle(players)
+    RETURN players
+END get_play_order
