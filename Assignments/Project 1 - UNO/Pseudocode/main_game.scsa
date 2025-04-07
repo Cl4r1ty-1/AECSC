@@ -2,4 +2,10 @@ MODULE play_game(deck)
     play_order = get_play_order()
     shuffle(deck)
     played_card = deck[0]
-    check_card(played_card)
+    deck.REMOVE(0)
+    WHILE played_card = "WILD" OR played_card = "WILD DRAW 4"
+        OUTPUT("Can't start on a wild card!")
+        played_card = deck[0]
+        deck.REMOVE(0)
+    END WHILE
+    
