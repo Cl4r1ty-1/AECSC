@@ -1,0 +1,11 @@
+MODULE check_card(played_card)
+    IF played_card = "WILD" THEN
+        INPUT(colour)
+        play_colour = colour
+    IF played_card = "WILD DRAW 4" THEN
+        INPUT(colour)
+        play_colour = colour
+        // add 4 to next players deck and skip turn 
+    IF "SKIP" IN played_card THEN
+        // yeah
+    
