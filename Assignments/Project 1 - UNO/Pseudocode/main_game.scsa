@@ -8,4 +8,4 @@ MODULE play_game(deck)
         played_card = deck[0]
         deck.REMOVE(0)
     END WHILE
-    
+    check_card(played_card)
