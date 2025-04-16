@@ -1,4 +1,5 @@
-from deck import deck, UnoCard
+from deck import deck
+from players import get_play_order
 import random
 import sys
 
@@ -27,19 +28,6 @@ def main_menu():
             print("Invalid Option!")
             option = input("> ")
 
-def get_play_order():
-    players = []
-    player = input("Enter a player name: ")
-    bots = int(input("Enter the number of computer opponents to play against: "))
-    return players
-
-def play_game():
-    play_order = get_play_order()
-    
-
-def get_scores():
-    pass
-
 def authenticate(filename):
     while True:
         try:
@@ -61,6 +49,15 @@ def authenticate(filename):
     print("Authenticated!")
     print()
     play_game()
+
+def play_game():
+    play_order = get_play_order()
+    played_card = deck[-1]
+    deck.pop()
+
+
+def get_scores():
+    pass
 
 if __name__ == '__main__':
     main_menu()

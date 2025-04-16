@@ -4,7 +4,7 @@ class UnoCard:
     def __init__(self, colour: str, type: str):
         self.colour = colour
         self.type = type
-    def __str__(self):
+    def __repr__(self):
         return f'{self.colour} {self.type}'
  
 colours = ['Blue', 'Green', 'Red', 'Yellow']
