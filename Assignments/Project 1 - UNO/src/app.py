@@ -3,7 +3,7 @@ from players import get_play_order
 import random
 import sys
 
-def main_menu():
+def main_menu() -> None:
     # Print menu screen
     print("Welcome to UNO!")
     print()
@@ -28,7 +28,7 @@ def main_menu():
             print("Invalid Option!")
             option = input("> ")
 
-def authenticate(filename):
+def authenticate(filename) -> None:
     while True:
         try:
             with open(filename, 'r') as f:
