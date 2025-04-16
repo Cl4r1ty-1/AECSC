@@ -6,3 +6,4 @@
 /scsa-pseudocode/package-lock.json
 *.tmp
 *.pdf
+/Assignments/Project 1 - UNO/src/__pycache__/*
