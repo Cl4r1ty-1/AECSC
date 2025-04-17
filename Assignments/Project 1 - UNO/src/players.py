@@ -13,7 +13,10 @@ class CPU(Player):
     pass
 
 def get_player_deck() -> list:
-    player_deck = [deck[-(i+1)] for i in range(7)]
+    player_deck = []
+    for i in range(7):
+        player_deck.append(deck[-1])
+        deck.pop()
     return player_deck
 
 def get_players() -> list:
