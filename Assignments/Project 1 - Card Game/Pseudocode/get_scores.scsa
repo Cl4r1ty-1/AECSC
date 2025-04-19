@@ -1,0 +1,6 @@
+MODULE get_scores(filename="leaderboard.csv")
+    OUTPUT("Top 5 Players:")
+    csv_reader = OPEN_CSV(filename)
+    FOR row IN csv_reader
+        OUTPUT(row[0] + " scored " + row[1])
+    END FOR

@@ -18,3 +18,4 @@ MODULE get_winner(card1, card2)
     ELSE
         RETURN 2
     END IF
+END get_winner

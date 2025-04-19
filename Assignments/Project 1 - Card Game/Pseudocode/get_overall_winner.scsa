@@ -1,0 +1,17 @@
+MODULE get_overall_winner(player1_deck, player2_deck)
+    OUTPUT("Player 1 won " + LENGTH(player1_deck) + " cards.")
+    OUTPUT("Player 2 won " + LENGTH(player2_deck) + " cards.")
+
+    IF LENGTH(player1_deck) > LENGTH(player2_deck) THEN
+        winner = player1
+        OUTPUT(player1 + " wins!")
+        OUTPUT(player1_deck)
+    ELSE IF LENGTH(player1_deck) < LENGTH(player2_deck) THEN
+        winner = player2
+        OUTPUT(player2 + " wins!")
+        OUTPUT(player2_deck)
+    ELSE
+        OUTPUT("Its a tie!)
+    END if
+    return winner
+END get_overall_winner

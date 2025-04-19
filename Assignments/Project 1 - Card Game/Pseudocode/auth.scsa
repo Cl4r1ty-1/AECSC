@@ -8,10 +8,12 @@ MODULE authenticate(filename)
     END WHILE
     CLOSE(filename)
 
-    INPUT(name)
+    INPUT(player1)
+    INPUT(player2)
     // Check if user is authorised
-    IF name IN users
+    IF player1 IN users AND player2 IN users
         RETURN "Authenticated"
     ELSE
         RETURN "Not Authorized"
+    END IF
 END authenticate

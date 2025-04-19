@@ -23,4 +23,7 @@ MODULE play_game(deck)
             player2_deck.APPEND(card1)
             player2_deck.APPEND(card2)
             OUTPUT("Player 2 won this round!)
+        END IF
+    END FOR
     RETURN player1_deck, player2_deck
+END play_game

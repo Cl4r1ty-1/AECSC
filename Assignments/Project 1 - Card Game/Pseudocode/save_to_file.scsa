@@ -1,0 +1,19 @@
+MODULE save_to_file(winner, score, filename="leaderboard.csv")
+    csv_reader = OPEN_CSV(filename)
+    entries = []
+    FOR row IN csv_reader
+        entries.APPEND((row[0], int(row[1])))
+    END FOR
+    CLOSE(csv_reader)
+    
+    entries.APPEND((winner, score))
+
+    entries.sort(key=entries[1], reverse=TRUE)
+    top_5 = entries[:5]
+
+    csv_write = OPEN_WRITE(filename)
+    FOR entry IN top_5
+        csv_write.WRITELINE(entry)
+    END FOR
+    CLOSE(csv_write)
+END save_to_file
