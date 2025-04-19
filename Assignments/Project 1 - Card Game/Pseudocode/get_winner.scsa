@@ -1,0 +1,20 @@
+MODULE get_winner(card1, card2)
+    IF card1["colour"] == card2["colour"] THEN
+        IF card1["number"] > card2["number"] THEN
+            RETURN 1
+        ELSE
+            RETURN 2
+        END IF
+    END IF
+
+    colour_win = {
+        "Red": "Black",
+        "Yellow": "Red",
+        "Black": "Yellow"
+    }
+
+    IF colour_win[card1["colour"]] == card2["colour"] THEN
+        RETURN 1
+    ELSE
+        RETURN 2
+    END IF

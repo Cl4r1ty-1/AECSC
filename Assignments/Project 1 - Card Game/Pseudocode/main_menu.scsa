@@ -1,5 +1,5 @@
 MODULE main_menu()
-    OUTPUT("Welcome to UNO!")
+    OUTPUT("Welcome to the card game!")
     OUTPUT()
     OUTPUT("Please select an option")
     OUTPUT("1. Play game")

@@ -1,0 +1,16 @@
+MODULE get_deck()
+    CONST colours = ["red", "black", "yellow"]
+    CONST numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+    deck = []
+    FOR colour IN colours
+        FOR number IN numbers
+            card = {"colour":colour, "number":number}
+            deck.APPEND(card)
+        END FOR
+    END FOR
+
+    RANDOM.SHUFFLE(deck)
+    RETURN deck
+END get_deck
+
