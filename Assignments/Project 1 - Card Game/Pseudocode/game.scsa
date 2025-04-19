@@ -1,0 +1,26 @@
+MODULE play_game(deck)
+    player1_deck = []
+    player2_deck = []
+
+    FOR num = 1 TO 15
+        card1 = deck[0]
+        deck.REMOVE(0)
+
+        card2 = deck[0]
+        deck.REMOVE(0)
+
+        OUTPUT("Round " + num)
+        OUTPUT("Player 1 plays " + card1)
+        OUTPUT("Player 2 plays " + card2)
+
+        winner = get_winner(card1, card2)
+
+        IF winner = 1 THEN
+            player1_deck.APPEND(card1)
+            player1_deck.APPEND(card2)
+            OUTPUT("Player 1 won this round!)
+        ELSE
+            player2_deck.APPEND(card1)
+            player2_deck.APPEND(card2)
+            OUTPUT("Player 2 won this round!)
+    RETURN player1_deck, player2_deck
