@@ -5,10 +5,12 @@ from scores import get_scores, save_to_file
 import sys
 
 def main_menu():
+    # init global vars
     global player1
     global player2
 
     print("Welcome to the card game!")
+    # main menu loop
     while True:
         print()
         print("Please select an option")
@@ -17,11 +19,11 @@ def main_menu():
         print("3. Exit")
         option = input("> ")
         if option == '1':
-            auth, player1, player2 = authenticate()
+            auth, player1, player2 = authenticate() # get player names from auth module
             # If users are authorized then play the game
             if auth:
                 deck = get_deck()
-                player1_deck, player2_deck = play_game(deck)
+                player1_deck, player2_deck = play_game(deck) # the main game function returns the player's decks for processing in the winner function
                 winner, score = get_overall_winner(player1, player2, player1_deck, player2_deck)
                 print()
                 print("Saving winner to leaderboard file!")
@@ -29,6 +31,7 @@ def main_menu():
                 save_to_file(winner, score)
                 print("Done!")
         elif option == '2':
+            # print top 5 leaderboard
             print()
             get_scores()
         elif option == '3':
@@ -39,12 +42,13 @@ def main_menu():
             print("Invalid Option!")
 
 def play_game(deck):
+    # init player decks
     player1_deck = []
     player2_deck = []
 
     print("Game is starting!")
     round_number = 0
-    while deck:
+    while deck: # continue until deck is empty
         round_number += 1
         print(f"Round number {round_number}")
         print()
@@ -52,7 +56,7 @@ def play_game(deck):
         print("Press enter to draw a card!")
         input("> ")
 
-        card1 = deck.pop(0)
+        card1 = deck.pop(0) # take a card from the top of the deck, this also removes it from the deck
         print(f"{player1} drew a {card1['colour']} {card1['number']}")
         print()
 
@@ -65,7 +69,9 @@ def play_game(deck):
         print()
 
         winner = get_winner(card1, card2)
+        # process result of winner function
         if winner == 1:
+            # add both cards to the winning player's deck
             player1_deck.append(card1)
             player1_deck.append(card2)
             print(f"{player1} won this round!")
@@ -79,6 +85,7 @@ def play_game(deck):
         input("> ")
     print("No more cards. Game over!")
     print()
+    # return player's decks for processing
     return player1_deck, player2_deck
 
 
