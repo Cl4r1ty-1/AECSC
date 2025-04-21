@@ -10,7 +10,7 @@ def save_to_file(winner, score, filename="leaderboard.csv"):
             for row in csv_reader:
                 entries.append((row[0], int(row[1])))
     except FileNotFoundError:
-        # if leaderboard is not found, assume game has not been run before and create a leaderboard file
+        # if leaderboard is not found, assume game has not been run before and continue to create a leaderboard file
         print("No leaderboard file found. Writing to a new file!")
 
     # add new winner to the list of current winners as a tuple
