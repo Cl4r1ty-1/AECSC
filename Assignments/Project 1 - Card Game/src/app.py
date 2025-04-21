@@ -9,14 +9,13 @@ def main_menu():
     global player2
 
     print("Welcome to the card game!")
-    print()
-    print("Please select an option")
-    print("1. Play game")
-    print("2. Display scores")
-    print("3. Exit")
-    
-    option = input("> ")
     while True:
+        print()
+        print("Please select an option")
+        print("1. Play game")
+        print("2. Display scores")
+        print("3. Exit")
+        option = input("> ")
         if option == '1':
             auth, player1, player2 = authenticate()
             # If users are authorized then play the game
@@ -29,18 +28,15 @@ def main_menu():
                 print()
                 save_to_file(winner, score)
                 print("Done!")
-            break
         elif option == '2':
             print()
             get_scores()
-            break
         elif option == '3':
             print("Thanks for playing!")
             sys.exit() # exit program
         else:
             # if input invalid then keep asking for a valid option
             print("Invalid Option!")
-            option = input("> ")
 
 def play_game(deck):
     player1_deck = []
