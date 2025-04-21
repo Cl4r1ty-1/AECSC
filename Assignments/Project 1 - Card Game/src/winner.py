@@ -20,6 +20,7 @@ def get_winner(card1, card2):
         return 2
 
 def get_overall_winner(player1, player2, player1_deck, player2_deck):
+    # get player's score based on how many cards they won
     player1_score = len(player1_deck)
     player2_score = len(player2_deck)
     
