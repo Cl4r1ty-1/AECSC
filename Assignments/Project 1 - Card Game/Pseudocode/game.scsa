@@ -18,11 +18,11 @@ MODULE play_game(deck)
         IF winner = 1 THEN
             player1_deck.APPEND(card1)
             player1_deck.APPEND(card2)
-            OUTPUT("Player 1 won this round!)
+            OUTPUT("Player 1 won this round!")
         ELSE
             player2_deck.APPEND(card1)
             player2_deck.APPEND(card2)
-            OUTPUT("Player 2 won this round!)
+            OUTPUT("Player 2 won this round!")
         END IF
     END FOR
     RETURN player1_deck, player2_deck

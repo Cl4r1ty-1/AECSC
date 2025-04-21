@@ -1,4 +1,7 @@
-MODULE authenticate(filename)
+MODULE authenticate(filename="users.txt")
+    GLOBAL player1
+    GLOBAL player2
+
     // Get authorised users from file
     user_db = OPEN_READ(filename)
     users = []

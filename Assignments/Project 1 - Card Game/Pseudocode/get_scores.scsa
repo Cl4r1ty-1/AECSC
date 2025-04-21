@@ -4,3 +4,4 @@ MODULE get_scores(filename="leaderboard.csv")
     FOR row IN csv_reader
         OUTPUT(row[0] + " scored " + row[1])
     END FOR
+END get_scores
