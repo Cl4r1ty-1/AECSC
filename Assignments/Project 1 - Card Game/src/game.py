@@ -25,6 +25,7 @@ def main_menu():
                 deck = get_deck()
                 player1_deck, player2_deck = play_game(deck) # the main game function returns the player's decks for processing in the winner function
                 winner, score = get_overall_winner(player1, player2, player1_deck, player2_deck)
+                
                 print()
                 print("Saving winner to leaderboard file!")
                 print()
@@ -90,4 +91,7 @@ def play_game(deck):
 
 
 if __name__ == "__main__":
-    main_menu()
+    try:
+        main_menu()
+    except KeyboardInterrupt:
+        print("\nExiting...")

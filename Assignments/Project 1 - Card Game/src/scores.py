@@ -1,5 +1,4 @@
 import csv
-import os
 
 def save_to_file(winner, score, filename="leaderboard.csv"):
     entries = []
