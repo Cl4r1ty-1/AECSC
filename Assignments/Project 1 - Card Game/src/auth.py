@@ -20,6 +20,11 @@ def authenticate(filename="users.txt"):
     player1 = input("Enter player 1's name: ").title()
     player2 = input("Enter player 2's name: ").title()
 
+    while player1 == player2:
+        print("Both players cannot have the same name!")
+        player1 = input("Enter player 1's name: ").title()
+        player2 = input("Enter player 2's name: ").title()
+
     auth = False
     while not auth:
     # Check if users are authorized, if not specify which one and let user try again
