@@ -31,10 +31,15 @@ def get_overall_winner(player1, player2, player1_deck, player2_deck):
         winner = player1
         score = player1_score
         print(player1 + " wins!")
+        return winner, score
     elif player1_score < player2_score:
         winner = player2
         score = player2_score
         print(player2 + " wins!")
+        return winner, score
     else:
         print("Its a tie!")
-    return winner, score
+        return None, None
+    
+if __name__ == "__main__":
+    print(get_overall_winner("1", "2", range(16), range(14)))

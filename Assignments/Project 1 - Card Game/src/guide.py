@@ -1,0 +1,22 @@
+def show_instructions():
+    print("===================================================")
+    print("Game instructions")
+    print("===================================================")
+    print("Each player takes a card from the top of the deck.")
+    print("The cards are scored as follows:")
+    print("---------------------------------------")
+    print("Colour 1         Colour 2        Winner")
+    print("---------------------------------------")
+    print("Red              Black           Red")
+    print("Yellow           Red             Yellow")
+    print("Black            Yellow          Black")
+    print("---------------------------------------")
+    print()
+    print("If both players draw cards with the same colour, the player with the higher numbered card wins.")
+    print()
+    print("The winner of the round takes both cards into their deck")
+    print("The overall winner of the game is the person who has the most cards at the end of the game.")
+    print("===================================================")
+
+if __name__ == "__main__":
+    show_instructions()

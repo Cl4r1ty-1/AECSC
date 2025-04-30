@@ -11,7 +11,7 @@ MODULE get_overall_winner(player1_deck, player2_deck)
         OUTPUT(player2 + " wins!")
         OUTPUT(player2_deck)
     ELSE
-        OUTPUT("Its a tie!)
+        OUTPUT("Its a tie!")
     END IF
     return winner
 END get_overall_winner

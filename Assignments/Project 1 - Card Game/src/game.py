@@ -2,6 +2,7 @@ from auth import authenticate
 from deck import get_deck
 from winner import get_winner, get_overall_winner
 from scores import get_scores, save_to_file
+from guide import show_instructions
 import sys
 
 def main_menu():
@@ -16,7 +17,8 @@ def main_menu():
         print("Please select an option")
         print("1. Play game")
         print("2. Display scores")
-        print("3. Exit")
+        print("3. Show instructions")
+        print("4. Exit")
         option = input("> ")
         if option == '1':
             auth, player1, player2 = authenticate() # get player names from auth module
@@ -27,15 +29,20 @@ def main_menu():
                 winner, score = get_overall_winner(player1, player2, player1_deck, player2_deck)
                 
                 print()
-                print("Saving winner to leaderboard file!")
-                print()
-                save_to_file(winner, score)
-                print("Done!")
+                if winner != None:
+                    print("Saving winner to leaderboard file!")
+                    print()
+                    save_to_file(winner, score)
+                    print("Done!")
         elif option == '2':
             # print top 5 leaderboard
             print()
             get_scores()
         elif option == '3':
+            print()
+            show_instructions()
+            print()
+        elif option == '4':
             print("Thanks for playing!")
             sys.exit() # exit program
         else:
@@ -47,9 +54,11 @@ def play_game(deck):
     player1_deck = []
     player2_deck = []
 
+    
     print("Game is starting!")
     round_number = 0
     while deck: # continue until deck is empty
+        print("-----------------------------------------------")
         round_number += 1
         print(f"Round number {round_number}")
         print()
@@ -67,7 +76,7 @@ def play_game(deck):
 
         card2 = deck.pop(0)
         print(f"{player2} drew a {card2['colour']} {card2['number']}")
-        print()
+        print("-----------------------------------------------")
 
         winner = get_winner(card1, card2)
         # process result of winner function
