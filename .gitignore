@@ -7,5 +7,5 @@
 *.tmp
 *.pdf
 *.pyc
-*.csv
 *.xlsx
+*.db
