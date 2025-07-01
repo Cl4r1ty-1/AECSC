@@ -1,0 +1,6 @@
+PokemonID,Name,Type,BaseAttack
+1,Pikachu,Electric,55
+2,Charizard,Fire,84
+3,Bulbasaur,Grass,49
+4,Squirtle,Water,48
+5,Gengar,Ghost,65
