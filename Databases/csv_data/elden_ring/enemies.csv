@@ -1,0 +1,6 @@
+EnemyID,Name,Type,HP
+1,Godrick Soldier,Humanoid,150
+2,Erdtree Avatar,Boss,3000
+3,Radahn Soldier,Humanoid,200
+4,Malenia,Boss,5000
+5,Marionette Soldier,Mechanical,120

@@ -1,0 +1,7 @@
+BattleID,EnemyID,WeaponID,Result
+1,1,1,Win
+2,2,2,Loss
+3,3,4,Win
+4,4,3,Loss
+5,5,5,Win
+6,2,5,Loss
