@@ -1,0 +1,12 @@
+﻿delivery_docket,collected_from,date_collected,weight,deliver_to,date_delivered,customer_id,driver_id
+14587,Jandakot,15/01/2037,0.6,Perth,17/01/2037,1,1
+21037,Belmont,12/01/2037,0.5,Malaga,12/01/2037,2,2
+21038,Perth,12/01/2037,3,West Perth,12/01/2037,3,2
+21039,Como,12/01/2037,5,Fremantle,12/01/2037,4,2
+31245,Forrestfield,10/01/2037,0.1,Perth,10/01/2037,5,3
+31248,Perth,10/01/2037,2,Subiaco,10/01/2037,6,3
+36532,West Perth,13/01/2037,5,Belmont,13/01/2037,7,4
+36533,Belmont,13/01/2037,10,Fremantle,14/01/2037,1,4
+67845,Perth,11/01/2037,10,Kewdale,12/01/2037,5,5
+67846,Belmont,11/01/2037,0.7,Subiaco,11/01/2037,8,5
+68485,Joondalup,21/01/2037,12,Como,23/01/2037,11,4
