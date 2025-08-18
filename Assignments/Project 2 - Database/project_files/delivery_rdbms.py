@@ -72,6 +72,54 @@ def import_csv_data():
     print("CSV Data Imported")
     conn.commit()
 
+def create_query_frame(root, query):
+    for widget in root.winfo_children():
+        widget.destroy()
+
+    query_func = globals()[query]
+
+    data, columns = query_func()
+
+    tree = ttk.Treeview(root, columns=columns, show='headings')
+    for col in columns:
+        tree.heading(col, text=col)
+        tree.column(col, width=100)
+    for row in data:
+        tree.insert('', tk.END, values=row)
+
+    tree.pack(expand=True, fill='both', padx=20, pady=10)
+    tk.Button(root, text='Back to Queries', command=lambda: query_menu(root)).pack(pady=10)
+
+
+def query_1():
+    c.execute("SELECT * FROM Customers WHERE Suburb LIKE 'K%'")
+    return c.fetchall(), [description[0] for description in c.description]
+
+def query_menu(root):
+    for widget in root.winfo_children():
+        widget.destroy()
+
+    tk.Label(root, text="Query menu",font=("Arial", 16, "bold")).pack(pady=40)
+
+    queries = [
+        ("Query One", "query_1"),
+        ("Query Two", "query_2"),
+        ("Query Three", "query_3"),
+        ("Query Four", "query_4"),
+        ("Query Five", "query_5"),
+        ("Query Six", "query_6"),
+        ("Query Seven", "query_7"),
+        ("Query Eight", "query_8"),
+        ("Query Nine", "query_9"),
+        ("Query Ten", "query_10"),
+        ("Query Eleven", "query_11"),
+    ]
+
+    for label, query in queries:
+        tk.Button(root, text=label, command=lambda q=query: create_query_frame(root, q)).pack(pady=5)
+
+    tk.Button(root, text="Back to home", command=lambda: show_intro_screen(root)).pack(pady=10)
+
 def fetch_table_data(table_name):
     c.execute(f"SELECT * FROM {table_name}")
     return c.fetchall(), [description[0] for description in c.description]
@@ -94,35 +142,6 @@ def create_table_frame(root, table_name):
     tree.pack(expand=True, fill='both', padx=20, pady=10)
     tk.Button(root, text='Back to Home', command=lambda: show_intro_screen(root)).pack(pady=10)
 
-def example_form(root):
-    for widget in root.winfo_children():
-        widget.destroy()
-
-    tk.Label(root, text="New customer registration", font=("Arial", 18, "bold")).pack(pady=40)
-    
-    first_name_entry = tk.Entry(root)
-    tk.Label(root, text="First Name").pack(pady=10)
-    first_name_entry.pack()
-
-    last_name_entry = tk.Entry(root)
-    tk.Label(root, text="Last Name").pack(pady=10)
-    last_name_entry.pack()
-
-    street_address_entry = tk.Entry(root)
-    tk.Label(root, text="Street Address").pack(pady=10)
-    street_address_entry.pack()
-
-    suburb_entry = tk.Entry(root)
-    tk.Label(root, text="Suburb").pack(pady=10)
-    suburb_entry.pack()
-
-    post_code_entry = tk.Entry(root)
-    tk.Label(root, text="Post Code").pack(pady=10)
-    post_code_entry.pack()
-
-    tk.Button(root, text="Register", command=lambda x='x': print(x)).pack(pady=10)
-
-
 def show_intro_screen(root):
     for widget in root.winfo_children():
         widget.destroy()
@@ -138,8 +157,7 @@ def show_intro_screen(root):
     for label, table in buttons:
         tk.Button(root, text=f"View {label} Table", command=lambda t=table: create_table_frame(root, t)).pack(pady=10)
 
-    # test form
-    tk.Button(root, text="Example Form", command=lambda: example_form(root)).pack(pady=10)
+    tk.Button(root, text="Queries", command=lambda: query_menu(root)).pack(pady=10)
 
 print("Setting up DB...")
 create_tables()
