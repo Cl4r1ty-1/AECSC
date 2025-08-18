@@ -94,6 +94,34 @@ def create_table_frame(root, table_name):
     tree.pack(expand=True, fill='both', padx=20, pady=10)
     tk.Button(root, text='Back to Home', command=lambda: show_intro_screen(root)).pack(pady=10)
 
+def example_form(root):
+    for widget in root.winfo_children():
+        widget.destroy()
+
+    tk.Label(root, text="New customer registration", font=("Arial", 18, "bold")).pack(pady=40)
+    
+    first_name_entry = tk.Entry(root)
+    tk.Label(root, text="First Name").pack(pady=10)
+    first_name_entry.pack()
+
+    last_name_entry = tk.Entry(root)
+    tk.Label(root, text="Last Name").pack(pady=10)
+    last_name_entry.pack()
+
+    street_address_entry = tk.Entry(root)
+    tk.Label(root, text="Street Address").pack(pady=10)
+    street_address_entry.pack()
+
+    suburb_entry = tk.Entry(root)
+    tk.Label(root, text="Suburb").pack(pady=10)
+    suburb_entry.pack()
+
+    post_code_entry = tk.Entry(root)
+    tk.Label(root, text="Post Code").pack(pady=10)
+    post_code_entry.pack()
+
+    tk.Button(root, text="Register", command=lambda x='x': print(x)).pack(pady=10)
+
 
 def show_intro_screen(root):
     for widget in root.winfo_children():
@@ -110,9 +138,15 @@ def show_intro_screen(root):
     for label, table in buttons:
         tk.Button(root, text=f"View {label} Table", command=lambda t=table: create_table_frame(root, t)).pack(pady=10)
 
+    # test form
+    tk.Button(root, text="Example Form", command=lambda: example_form(root)).pack(pady=10)
 
+print("Setting up DB...")
 create_tables()
 import_csv_data()
+print("Done")
+
+print("Starting app...")
 
 root = tk.Tk()
 root.title("Delivery Database")
