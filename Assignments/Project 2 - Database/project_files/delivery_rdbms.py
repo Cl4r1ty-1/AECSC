@@ -18,7 +18,7 @@ def create_tables():
                 last_name TEXT,
                 street_address TEXT,
                 suburb TEXT,
-                post_code TEXT
+                post_code INTEGER
               )
             """)
     
@@ -29,7 +29,7 @@ def create_tables():
                 last_name TEXT,
                 street_address TEXT,
                 suburb TEXT,
-                post_code TEXT,
+                post_code INTEGER,
                 phone_number TEXT
               )
             """)
@@ -95,6 +95,18 @@ def query_1():
     c.execute("SELECT * FROM Customers WHERE Suburb LIKE 'K%'")
     return c.fetchall(), [description[0] for description in c.description]
 
+def query_2():
+    c.execute("SELECT delivery_docket, collected_from, date_collected, weight, deliver_to, date_delivered FROM Deliveries WHERE driver_id = (SELECT driver_id FROM Drivers WHERE first_name = 'Brad' AND last_name = 'Johnson')")
+    return c.fetchall(), [description[0] for description in c.description]
+
+def query_3():
+    c.execute("SELECT * FROM Deliveries WHERE deliver_to = 'Subiaco' AND weight < 5")
+    return c.fetchall(), [description[0] for description in c.description]
+
+def query_4():
+    c.execute("SELECT * FROM Customers WHERE post_code BETWEEN 6030 AND 6090 ORDER BY post_code DESC")
+    return c.fetchall(), [description[0] for description in c.description]
+
 def query_menu(root):
     for widget in root.winfo_children():
         widget.destroy()
@@ -102,10 +114,10 @@ def query_menu(root):
     tk.Label(root, text="Query menu",font=("Arial", 16, "bold")).pack(pady=40)
 
     queries = [
-        ("Query One", "query_1"),
-        ("Query Two", "query_2"),
-        ("Query Three", "query_3"),
-        ("Query Four", "query_4"),
+        ("List of customers' details who live in a suburb that start with a K", "query_1"),
+        ("Brad Johnson's deliveries", "query_2"),
+        ("Light deliveries to Subiaco", "query_3"),
+        ("Customers in postcodes 6030-6090", "query_4"),
         ("Query Five", "query_5"),
         ("Query Six", "query_6"),
         ("Query Seven", "query_7"),
