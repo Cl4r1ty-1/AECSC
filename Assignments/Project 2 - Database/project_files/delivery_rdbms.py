@@ -76,9 +76,9 @@ def create_query_frame(root, query):
     for widget in root.winfo_children():
         widget.destroy()
 
-    query_func = globals()[query]
+    c.execute(query)
 
-    data, columns = query_func()
+    data, columns = c.fetchall(), [description[0] for description in c.description]
 
     tree = ttk.Treeview(root, columns=columns, show='headings')
     for col in columns:
@@ -107,24 +107,67 @@ def query_4():
     c.execute("SELECT * FROM Customers WHERE post_code BETWEEN 6030 AND 6090 ORDER BY post_code DESC")
     return c.fetchall(), [description[0] for description in c.description]
 
+def query_5():
+    c.execute("")
+    return c.fetchall(), [description[0] for description in c.description]
+
 def query_menu(root):
     for widget in root.winfo_children():
         widget.destroy()
 
     tk.Label(root, text="Query menu",font=("Arial", 16, "bold")).pack(pady=40)
 
+    
+    # todo: ask about inner joins, maybe do it for all deliveries (i.e include customers name and drivers name)
     queries = [
-        ("List of customers' details who live in a suburb that start with a K", "query_1"),
-        ("Brad Johnson's deliveries", "query_2"),
-        ("Light deliveries to Subiaco", "query_3"),
-        ("Customers in postcodes 6030-6090", "query_4"),
-        ("Query Five", "query_5"),
-        ("Query Six", "query_6"),
-        ("Query Seven", "query_7"),
-        ("Query Eight", "query_8"),
-        ("Query Nine", "query_9"),
-        ("Query Ten", "query_10"),
-        ("Query Eleven", "query_11"),
+        ("List of customers' details who live in a suburb that start with a K", 
+         """SELECT * FROM Customers 
+            WHERE Suburb LIKE 'K%'"""),
+        ("Brad Johnson's deliveries", 
+         """SELECT delivery_docket, collected_from, date_collected, weight, deliver_to, date_delivered, customer_id 
+            FROM Deliveries 
+            WHERE driver_id = (SELECT driver_id FROM Drivers WHERE first_name = 'Brad' AND last_name = 'Johnson')"""),
+        ("Deliveries under 5kg going to Subiaco", 
+         """SELECT * FROM Deliveries 
+            WHERE deliver_to = 'Subiaco' AND weight < 5"""),
+        ("Customers in postcodes 6030-6090", 
+         """SELECT * FROM Customers 
+            WHERE post_code BETWEEN 6030 AND 6090 
+            ORDER BY post_code DESC"""),
+        ("Specific Date", 
+         "query_5"), # todo
+        ("Weight Range", 
+         "query_6"), # todo
+        ("Show heavy or light", 
+         """SELECT delivery_docket, collected_from, date_collected, weight, deliver_to, date_delivered, 
+            CASE 
+                WHEN weight < 9 THEN 'Light' 
+                WHEN weight >= 9 THEN 'Heavy' 
+                ELSE 'Invalid Weight' 
+            END AS weight_category 
+            FROM Deliveries"""),
+        ("Number of delivers and drivers", 
+         """SELECT 
+            (SELECT COUNT(*) FROM Deliveries) AS deliveries, 
+            (SELECT COUNT(*) FROM Drivers) AS drivers"""),
+        ("Average, Lowest, Highest Weight", 
+         """SELECT 
+            ROUND(AVG(Weight), 2) AS Average, 
+            MIN(Weight) AS Lowest, 
+            MAX(Weight) AS Highest 
+            FROM Deliveries"""),
+        ("Fees", 
+         """SELECT Deliveries.delivery_docket, Deliveries.collected_from, Deliveries.date_collected, Deliveries.weight, Deliveries.deliver_to, Deliveries.date_delivered, 
+            Drivers.first_name AS driver_first_name, Drivers.last_name AS driver_last_name, 
+            (10+(10*weight)) AS Fee 
+            FROM Deliveries 
+            INNER JOIN Drivers ON Deliveries.driver_id = Drivers.driver_id"""),
+        ("Mystery Package", 
+         """SELECT Deliveries.delivery_docket, Deliveries.collected_from, Deliveries.date_collected, Deliveries.weight, Deliveries.deliver_to, Deliveries.date_delivered, 
+            CONCAT(Customers.first_name, ' ', Customers.last_name) AS Customer
+            FROM Deliveries
+            INNER JOIN Customers ON Deliveries.customer_id = Customers.customer_id
+            WHERE Deliveries.date_delivered > 12/01/2037 AND Deliveries.weight > 3 AND Customers.last_name LIKE 'A%'""")
     ]
 
     for label, query in queries:
