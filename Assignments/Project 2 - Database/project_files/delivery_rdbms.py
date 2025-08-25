@@ -2,6 +2,7 @@ import sqlite3
 import csv
 import tkinter as tk
 from tkinter import messagebox, filedialog, ttk, simpledialog
+from fpdf import FPDF
 
 conn = sqlite3.connect("delivery.db")
 c = conn.cursor()
@@ -77,17 +78,20 @@ def create_query_frame(root, query):
         widget.destroy()
 
     if query == 'query_5':
-        specific_date = simpledialog.askstring("Specific Date", "Enter date (DD/MM/YYYY): ", initialvalue="01/01/2000")
-        # todo: input handling
-        c.execute("""
-                  SELECT Deliveries.delivery_docket, Deliveries.collected_from, Deliveries.date_collected, Deliveries.weight, Deliveries.deliver_to, Deliveries.date_delivered,
-                  CONCAT(Drivers.first_name, ' ', Drivers.last_name) AS driver,
-                  CONCAT(Customers.first_name, ' ', Customers.last_name) AS customer
-                  FROM Deliveries
-                  INNER JOIN Drivers ON Deliveries.driver_id = Drivers.driver_id
-                  INNER JOIN Customers ON Deliveries.customer_id = Customers.customer_id
-                  WHERE Deliveries.date_delivered = ?
-                  """, (specific_date,))
+        try:
+            specific_date = simpledialog.askstring("Specific Date", "Enter date (DD/MM/YYYY): ", initialvalue="01/01/2000")
+            # todo: input handling
+            c.execute("""
+                    SELECT Deliveries.delivery_docket, Deliveries.collected_from, Deliveries.date_collected, Deliveries.weight, Deliveries.deliver_to, Deliveries.date_delivered,
+                    CONCAT(Drivers.first_name, ' ', Drivers.last_name) AS driver,
+                    CONCAT(Customers.first_name, ' ', Customers.last_name) AS customer
+                    FROM Deliveries
+                    INNER JOIN Drivers ON Deliveries.driver_id = Drivers.driver_id
+                    INNER JOIN Customers ON Deliveries.customer_id = Customers.customer_id
+                    WHERE Deliveries.date_delivered = ?
+                    """, (specific_date,))
+        except Exception as e:
+            messagebox.showerror("Invalid input", "Please enter a valid date in the correct format")
     elif query == 'query_6':
         low_weight = simpledialog.askfloat("Low Weight", "Enter the minimum weight: ")
         high_weight = simpledialog.askfloat("High Weight", "Enter the maximum weight: ")
@@ -178,6 +182,35 @@ def query_menu(root):
 
     tk.Button(root, text="Back to home", command=lambda: show_intro_screen(root)).pack(pady=10)
 
+def export_to_pdf(label, qurey):
+    c.execute(qurey)
+
+    headers = [desc[0] for desc in c.description]
+    data = c.fetchall()
+
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", "B", 16)
+    pdf.cell(0, 10, "Delivery Report", ln=True, align="C")
+    pdf.cell(0, 10, label, ln=True, align="C")
+    pdf.ln(10)
+
+    pdf.set_font("Arial", "B", 12)
+    col_width = pdf.w / (len(headers) + 1) 
+    row_height = 10
+
+    for header in headers:
+        pdf.cell(col_width, row_height, header, border=1, align="C")
+    pdf.ln(row_height)
+
+    pdf.set_font("Arial", "", 11)
+    for row in data:
+        for item in row:
+            pdf.cell(col_width, row_height, str(item), border=1, align="C")
+        pdf.ln(row_height)
+
+    pdf.output('test.pdf', "F")
+
 def export_to_csv(query):
     c.execute(query)
     results = c.fetchall()
@@ -200,7 +233,7 @@ def export_to_csv(query):
     except Exception as e:
         messagebox.showerror("Error", str(e))
 
-def create_report_frame(root, query):
+def create_report_frame(root, label, query):
     for widget in root.winfo_children():
         widget.destroy()
 
@@ -217,6 +250,7 @@ def create_report_frame(root, query):
 
     tree.pack(expand=True, fill='both', padx=20, pady=10)
     tk.Button(root, text="Export to CSV", command=lambda q=query: export_to_csv(q)).pack(pady=10)
+    tk.Button(root, text="Export to PDF", command=lambda l=label, q=query: export_to_pdf(l, q)).pack(pady=10)
     tk.Button(root, text='Back to Home', command=lambda: show_intro_screen(root)).pack(pady=10)
 
 def report_menu(root):
@@ -244,7 +278,7 @@ def report_menu(root):
     tk.Label(root, text="Report Menu", font=("Arial", 16, "bold")).pack(pady=10)
 
     for label, qurey in queries:
-        tk.Button(root, text=label, command=lambda q=qurey: create_report_frame(root, q)).pack(pady=10)
+        tk.Button(root, text=label, command=lambda q=qurey, l=label: create_report_frame(root, l, q)).pack(pady=10)
 
     tk.Button(root, text="Back to Home", command=lambda: show_intro_screen(root)).pack(pady=10, padx=10)
     
@@ -303,3 +337,5 @@ root.geometry("800x600")
 show_intro_screen(root)
 
 root.mainloop()
+conn.close()
+print("DB Connection Closed")
