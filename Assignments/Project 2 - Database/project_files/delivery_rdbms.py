@@ -12,7 +12,7 @@ def create_tables():
     c.execute("DROP TABLE IF EXISTS Customers")
     c.execute("DROP TABLE IF EXISTS Deliveries")
     c.execute("DROP TABLE IF EXISTS Drivers")
-    # to do: set NOT NULL on required values
+
     c.execute("""
               CREATE TABLE Customers (
                 customer_id INTEGER PRIMARY KEY NOT NULL,
@@ -26,25 +26,25 @@ def create_tables():
     
     c.execute("""
               CREATE TABLE Drivers (
-                driver_id INTEGER PRIMARY KEY,
-                first_name TEXT,
+                driver_id INTEGER PRIMARY KEY NOT NULL,
+                first_name TEXT NOT NULL,
                 last_name TEXT,
-                street_address TEXT,
-                suburb TEXT,
-                post_code INTEGER,
-                phone_number TEXT
+                street_address TEXT NOT NULL,
+                suburb TEXT NOT NULL,
+                post_code INTEGER NOT NULL,
+                phone_number TEXT NOT NULL
               )
             """)
     
     c.execute("""
               CREATE TABLE Deliveries (
-                delivery_docket INTEGER PRIMARY KEY,
-                collected_from TEXT,
-                date_collected DATE,
-                weight REAL,
-                deliver_to TEXT,
+                delivery_docket INTEGER PRIMARY KEY NOT NULL,
+                collected_from TEXT NOT NULL,
+                date_collected DATE NOT NULL,
+                weight REAL NOT NULL,
+                deliver_to TEXT NOT NULL,
                 date_delivered DATE,
-                customer_id INTEGER,
+                customer_id INTEGER NOT NULL,
                 driver_id INTEGER,
                 FOREIGN KEY (customer_id) REFERENCES Customers (customer_id),
                 FOREIGN KEY (driver_id) REFERENCES Drivers (driver_id)
@@ -81,7 +81,7 @@ def create_query_frame(root, query):
     if query == 'query_5':
         try:
             specific_date = simpledialog.askstring("Specific Date", "Enter date (DD/MM/YYYY): ", initialvalue="01/01/2000")
-            # todo: input handling
+
             c.execute("""
                     SELECT Deliveries.delivery_docket, Deliveries.collected_from, Deliveries.date_collected, Deliveries.weight, Deliveries.deliver_to, Deliveries.date_delivered,
                     CONCAT(Drivers.first_name, ' ', Drivers.last_name) AS driver,
@@ -105,6 +105,9 @@ def create_query_frame(root, query):
         c.execute(query)
 
     data, columns = c.fetchall(), [description[0] for description in c.description]
+
+    if not data:
+            messagebox.showwarning("No results", "No results found, ensure you enter correct date/weight value(s)!")
 
     tree = ttk.Treeview(root, columns=columns, show='headings')
     for col in columns:
