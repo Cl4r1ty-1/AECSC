@@ -3,6 +3,7 @@ import csv
 import tkinter as tk
 from tkinter import messagebox, filedialog, ttk, simpledialog
 from fpdf import FPDF
+from PIL import Image, ImageTk
 
 conn = sqlite3.connect("delivery.db")
 c = conn.cursor()
@@ -188,28 +189,51 @@ def export_to_pdf(label, qurey):
     headers = [desc[0] for desc in c.description]
     data = c.fetchall()
 
-    pdf = FPDF()
+    pdf_file_path = filedialog.asksaveasfilename(defaultextension=".pdf", filetypes=[("PDF Files", "*.pdf")])
+
+    pdf = FPDF(orientation="L")
     pdf.add_page()
     pdf.set_font("Arial", "B", 16)
     pdf.cell(0, 10, "Delivery Report", ln=True, align="C")
+    pdf.image("logo.png", x=5, y=2, w=50)
     pdf.cell(0, 10, label, ln=True, align="C")
     pdf.ln(10)
 
-    pdf.set_font("Arial", "B", 12)
-    col_width = pdf.w / (len(headers) + 1) 
+    pdf.set_font("Arial", "U", 10)
     row_height = 10
 
-    for header in headers:
-        pdf.cell(col_width, row_height, header, border=1, align="C")
+    
+    col_widths = []
+    for i, header in enumerate(headers):
+        max_width = pdf.get_string_width(str(header))
+        for row in data:
+            cell_text = str(row[i])
+            cell_width = pdf.get_string_width(cell_text)
+            if cell_width > max_width:
+                max_width = cell_width
+
+        col_widths.append(max_width + 6)
+
+    table_width = sum(col_widths)
+    page_width = pdf.w - 2 * pdf.l_margin
+    left_margin = pdf.l_margin + max(0, (page_width - table_width) / 2)
+
+
+    pdf.set_x(left_margin)
+
+    for i, header in enumerate(headers):
+        pdf.cell(col_widths[i], row_height, str(header), border=1, align="C")
     pdf.ln(row_height)
 
-    pdf.set_font("Arial", "", 11)
+    pdf.set_font("Arial", "", 10)
     for row in data:
-        for item in row:
-            pdf.cell(col_width, row_height, str(item), border=1, align="C")
+        pdf.set_x(left_margin)
+        for i, item in enumerate(row):
+            pdf.cell(col_widths[i], row_height, str(item), border=1, align="C")
         pdf.ln(row_height)
 
-    pdf.output('test.pdf', "F")
+    pdf.output(pdf_file_path, "F")
+    messagebox.showinfo("Success", f"Report exported to {pdf_file_path}")
 
 def export_to_csv(query):
     c.execute(query)
@@ -309,7 +333,20 @@ def show_intro_screen(root):
     for widget in root.winfo_children():
         widget.destroy()
 
-    tk.Label(root, text="Welcome to the Delivery Database", font=("Arial", 18, "bold")).pack(pady=40)
+    logo_image = Image.open("logo.png")
+
+    img_width, img_height = logo_image.size
+    aspect_radio = img_width / img_height
+    width = 200
+    height = int(width / aspect_radio)
+    logo_image = logo_image.resize((width, height), Image.Resampling.LANCZOS)
+    
+    tk_logo = ImageTk.PhotoImage(logo_image)
+    root.tk_logo = tk_logo
+
+    ttk.Label(root, image=root.tk_logo).pack()
+
+    tk.Label(root, text="Welcome to the Delivery Database", font=("Arial", 18, "bold")).pack(pady=20)
 
     buttons = [
         ("Deliveries", "Deliveries"),
