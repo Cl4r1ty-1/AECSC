@@ -349,7 +349,8 @@ def create_table_frame(root, table_name):
     tree.pack(expand=True, fill='both', padx=20, pady=10)
     tk.Button(root, text='Back to Home', command=lambda: show_intro_screen(root)).pack(pady=10)
 
-def show_intro_screen(root, name):
+def show_intro_screen(root):
+    global name
     for widget in root.winfo_children():
         widget.destroy()
 
@@ -382,6 +383,7 @@ def show_intro_screen(root, name):
     tk.Button(root, text="Logout", command=lambda: login_menu(root)).pack(pady=10)
 
 def authenticate(username, password):
+    global name
     username = username.lower()
     c.execute("SELECT * FROM Users WHERE username = ?", (username,))
     user_info = c.fetchall()
@@ -392,7 +394,7 @@ def authenticate(username, password):
 
         if entered_password == hashed_password:
             name = user_info[0][1]
-            show_intro_screen(root, name)
+            show_intro_screen(root)
         else:
             messagebox.showerror("Login Failed", "Invalid username or password!")
     else:
