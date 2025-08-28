@@ -4,6 +4,7 @@ import tkinter as tk
 from tkinter import messagebox, filedialog, ttk, simpledialog
 from fpdf import FPDF
 from PIL import Image, ImageTk
+import hashlib
 
 conn = sqlite3.connect("delivery.db")
 c = conn.cursor()
@@ -12,6 +13,7 @@ def create_tables():
     c.execute("DROP TABLE IF EXISTS Customers")
     c.execute("DROP TABLE IF EXISTS Deliveries")
     c.execute("DROP TABLE IF EXISTS Drivers")
+    c.execute("DROP TABLE IF EXISTS Users")
 
     c.execute("""
               CREATE TABLE Customers (
@@ -50,6 +52,15 @@ def create_tables():
                 FOREIGN KEY (driver_id) REFERENCES Drivers (driver_id)
               )
               """)
+    
+    c.execute("""
+              CREATE TABLE Users (
+                user_id INTEGER PRIMARY KEY,
+                display_name TEXT,
+                username TEXT,
+                hashed_password TEXT
+              )
+              """)
     print("Tables Created")
     conn.commit()
 
@@ -71,6 +82,12 @@ def import_csv_data():
         next(reader)
         for row in reader:
             c.execute("INSERT INTO Deliveries (delivery_docket, collected_from, date_collected, weight, deliver_to, date_delivered, customer_id, driver_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (int(row[0]), row[1], row[2], float(row[3]), row[4], row[5], int(row[6]), int(row[7])))
+    
+    with open('users.csv', 'r') as file:
+        reader = csv.reader(file)
+        next(reader)
+        for row in reader:
+            c.execute("INSERT INTO Users (user_id, display_name, username, hashed_password) VALUES (?, ?, ?, ?)", (int(row[0]), row[1], row[2], row[3]))
     print("CSV Data Imported")
     conn.commit()
 
@@ -332,7 +349,7 @@ def create_table_frame(root, table_name):
     tree.pack(expand=True, fill='both', padx=20, pady=10)
     tk.Button(root, text='Back to Home', command=lambda: show_intro_screen(root)).pack(pady=10)
 
-def show_intro_screen(root):
+def show_intro_screen(root, name):
     for widget in root.winfo_children():
         widget.destroy()
 
@@ -349,7 +366,7 @@ def show_intro_screen(root):
 
     ttk.Label(root, image=root.tk_logo).pack()
 
-    tk.Label(root, text="Welcome to the Delivery Database", font=("Arial", 18, "bold")).pack(pady=20)
+    tk.Label(root, text=f"Welcome to the Delivery Database, {name}!", font=("Arial", 18, "bold")).pack(pady=20)
 
     buttons = [
         ("Deliveries", "Deliveries"),
@@ -362,7 +379,56 @@ def show_intro_screen(root):
 
     tk.Button(root, text="Queries", command=lambda: query_menu(root)).pack(pady=10)
     tk.Button(root, text="Reports", command=lambda: report_menu(root)).pack(pady=10)
+    tk.Button(root, text="Logout", command=lambda: login_menu(root)).pack(pady=10)
 
+def authenticate(username, password):
+    username = username.lower()
+    c.execute("SELECT * FROM Users WHERE username = ?", (username,))
+    user_info = c.fetchall()
+    if user_info:
+        hashed_password = user_info[0][3]
+
+        entered_password = hashlib.md5(password.encode('utf-8')).hexdigest()
+
+        if entered_password == hashed_password:
+            name = user_info[0][1]
+            show_intro_screen(root, name)
+        else:
+            messagebox.showerror("Login Failed", "Invalid username or password!")
+    else:
+        messagebox.showerror("Login Failed", "Invalid username or password!")
+
+
+
+def login_menu(root):
+    for widget in root.winfo_children():
+        widget.destroy()
+
+    tk.Label(root, text="Please login to the delivery database", font=("Arial", 18, 'bold')).pack(pady=10)
+
+    logo_image = Image.open("logo.png")
+
+    img_width, img_height = logo_image.size
+    aspect_radio = img_width / img_height
+    width = 400
+    height = int(width / aspect_radio)
+    logo_image = logo_image.resize((width, height), Image.Resampling.LANCZOS)
+    
+    tk_logo = ImageTk.PhotoImage(logo_image)
+    root.tk_logo = tk_logo
+
+    ttk.Label(root, image=root.tk_logo).pack(pady=30)
+
+    tk.Label(root, text="Username:", font=("Arial", 12, "bold")).pack(pady=5)
+    username_field = tk.Entry(root)
+    username_field.pack(pady=5)
+
+    tk.Label(root, text="Password:", font=("Arial", 12, "bold")).pack(pady=5)
+    password_field = tk.Entry(root, show="*")
+    password_field.pack(pady=5)
+
+    root.bind('<Return>', lambda button: authenticate(username_field.get(), password_field.get()))
+    tk.Button(root, text="Login", command=lambda: authenticate(username_field.get(), password_field.get())).pack(pady=10)
 print("Setting up DB...")
 create_tables()
 import_csv_data()
@@ -374,7 +440,8 @@ root = tk.Tk()
 root.title("Delivery Database")
 root.geometry("800x600")
 
-show_intro_screen(root)
+login_menu(root)
+# show_intro_screen(root)
 
 root.mainloop()
 conn.close()
