@@ -326,6 +326,18 @@ def report_menu(root):
 
     tk.Button(root, text="Back to Home", command=lambda: show_intro_screen(root)).pack(pady=10, padx=10)
     
+def form_menu(root):
+    for widget in root.winfo_children():
+        widget.destroy()
+
+    tk.Label(root, text="Form Menu", font=("Arial", 16, "bold")).pack(pady=10)
+
+    tk.Button(root, text="New Customer", command=lambda: customer_form(root)).pack(pady=10)
+    tk.Button(root, text="New Driver", command=lambda: driver_form(root)).pack(pady=10)
+    tk.Button(root, text="New Delivery", command=lambda: delivery_form(root)).pack(pady=10)
+    tk.Button(root, text="New User", command=lambda: user_form(root)).pack(pady=10)
+
+    tk.Button(root, text="Back to Home", command=lambda: show_intro_screen(root)).pack(pady=20, padx=10)
 
 def fetch_table_data(table_name):
     c.execute(f"SELECT * FROM {table_name}")
@@ -380,6 +392,7 @@ def show_intro_screen(root):
 
     tk.Button(root, text="Queries", command=lambda: query_menu(root)).pack(pady=10)
     tk.Button(root, text="Reports", command=lambda: report_menu(root)).pack(pady=10)
+    tk.Button(root, text="Forms", command=lambda: form_menu(root)).pack(pady=10)
     tk.Button(root, text="Logout", command=lambda: login_menu(root)).pack(pady=10)
 
 def authenticate(username, password):
