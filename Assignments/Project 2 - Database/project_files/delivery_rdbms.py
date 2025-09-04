@@ -222,7 +222,7 @@ def export_to_pdf(label, qurey):
     pdf.set_font("Arial", "U", 10)
     row_height = 10
 
-    
+    # I used GitHub Copilot here to help with some of the formatting such as keeping the table centred
     col_widths = []
     for i, header in enumerate(headers):
         max_width = pdf.get_string_width(str(header))
@@ -443,7 +443,6 @@ root.title("Delivery Database")
 root.geometry("800x600")
 
 login_menu(root)
-# show_intro_screen(root)
 
 root.mainloop()
 conn.close()
