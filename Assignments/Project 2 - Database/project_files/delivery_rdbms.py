@@ -325,7 +325,172 @@ def report_menu(root):
         tk.Button(root, text=label, command=lambda q=qurey, l=label: create_report_frame(root, l, q)).pack(pady=10)
 
     tk.Button(root, text="Back to Home", command=lambda: show_intro_screen(root)).pack(pady=10, padx=10)
+
+def submit_customer_form(first_name, last_name, street_address, suburb, post_code):
+    try:
+        if not first_name or not street_address or not suburb or not post_code:
+            raise ValueError("Please fill in all required fields (First Name, Street Address, Suburb, Post Code)")
+
+        if not post_code.isdigit() or len(post_code) != 4:
+            raise ValueError("Post Code must be a 4-digit number")
+
+        c.execute("INSERT INTO Customers (first_name, last_name, street_address, suburb, post_code) VALUES (?, ?, ?, ?, ?)", (first_name, last_name, street_address, suburb, int(post_code)))
+        conn.commit()
+        messagebox.showinfo("Success", "Customer added successfully!")
+    except Exception as e:
+        messagebox.showerror("Error", f"An error occurred: {str(e)}")
+
+def submit_driver_form(first_name, last_name, street_address, suburb, post_code, phone_number):
+    try:
+        if not first_name or not street_address or not suburb or not post_code or not phone_number:
+            raise ValueError("Please fill in all required fields (First Name, Street Address, Suburb, Post Code, Phone Number)")
+
+        if not post_code.isdigit() or len(post_code) != 4:
+            raise ValueError("Post Code must be a 4-digit number")
+
+        if not phone_number.isdigit() or len(phone_number) != 10:
+            raise ValueError("Phone Number must be 10 digits")
+
+        c.execute("INSERT INTO Drivers (first_name, last_name, street_address, suburb, post_code, phone_number) VALUES (?, ?, ?, ?, ?, ?)", (first_name, last_name, street_address, suburb, int(post_code), phone_number))
+        conn.commit()
+        messagebox.showinfo("Success", "Driver added successfully!")
+    except Exception as e:
+        messagebox.showerror("Error", f"An error occurred: {str(e)}")
+
+def submit_delivery_form(delivery_docket, collected_from, date_collected, weight, deliver_to, date_delivered, customer_id, driver_id):
+    try:
+        if not delivery_docket or not collected_from or not date_collected or not weight or not deliver_to or not customer_id:
+            raise ValueError("Please fill in all required fields (Delivery Docket, Collected From, Date Collected, Weight, Deliver To, Customer ID)")
+
+        if not delivery_docket.isdigit():
+            raise ValueError("Delivery Docket must be a number")
+
+        try:
+            weight = float(weight)
+            if weight <= 0:
+                raise ValueError
+        except ValueError:
+            raise ValueError("Weight must be a positive number")
+
+        if not customer_id.isdigit():
+            raise ValueError("Customer ID must be a number")
+
+        if driver_id and not driver_id.isdigit():
+            raise ValueError("Driver ID must be a number")
+
+        c.execute("INSERT INTO Deliveries (delivery_docket, collected_from, date_collected, weight, deliver_to, date_delivered, customer_id, driver_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (int(delivery_docket), collected_from, date_collected, weight, deliver_to, date_delivered if date_delivered else None, int(customer_id), int(driver_id) if driver_id else None))
+        conn.commit()
+        messagebox.showinfo("Success", "Delivery added successfully!")
+    except Exception as e:
+        messagebox.showerror("Error", f"An error occurred: {str(e)}")
+
+def customer_form(root):
+    for widget in root.winfo_children():
+        widget.destroy()
+
+    tk.Label(root, text="Customer Form", font=("Arial", 16, "bold")).pack(pady=10)
+
+    tk.Label(root, text="First Name", font=("Arial", 12)).pack(pady=5)
+    first_name_entry = tk.Entry(root)
+    first_name_entry.pack(pady=5)
     
+    tk.Label(root, text="Last Name", font=("Arial", 12)).pack(pady=5)
+    last_name_entry = tk.Entry(root)
+    last_name_entry.pack(pady=5)
+
+    tk.Label(root, text="Street Address", font=("Arial", 12)).pack(pady=5)
+    street_address_entry = tk.Entry(root)
+    street_address_entry.pack(pady=5)
+
+    tk.Label(root, text="Suburb", font=("Arial", 12)).pack(pady=5)
+    suburb_entry = tk.Entry(root)
+    suburb_entry.pack(pady=5)
+
+    tk.Label(root, text="Post Code", font=("Arial", 12)).pack(pady=5)
+    post_code_entry = tk.Entry(root)
+    post_code_entry.pack(pady=5)
+
+    tk.Button(root, text="Submit", command=lambda: submit_customer_form(first_name_entry.get(), last_name_entry.get(), street_address_entry.get(), suburb_entry.get(), post_code_entry.get())).pack(pady=10)
+
+    tk.Button(root, text="Back to Home", command=lambda: form_menu(root)).pack(pady=10, padx=10)
+
+def driver_form(root):
+    for widget in root.winfo_children():
+        widget.destroy()
+
+    tk.Label(root, text="Driver Form", font=("Arial", 16, "bold")).pack(pady=10)
+
+    tk.Label(root, text="First Name", font=("Arial", 12)).pack(pady=5)
+    first_name_entry = tk.Entry(root)
+    first_name_entry.pack(pady=5)
+    
+    tk.Label(root, text="Last Name", font=("Arial", 12)).pack(pady=5)
+    last_name_entry = tk.Entry(root)
+    last_name_entry.pack(pady=5)
+
+    tk.Label(root, text="Street Address", font=("Arial", 12)).pack(pady=5)
+    street_address_entry = tk.Entry(root)
+    street_address_entry.pack(pady=5)
+
+    tk.Label(root, text="Suburb", font=("Arial", 12)).pack(pady=5)
+    suburb_entry = tk.Entry(root)
+    suburb_entry.pack(pady=5)
+
+    tk.Label(root, text="Post Code", font=("Arial", 12)).pack(pady=5)
+    post_code_entry = tk.Entry(root)
+    post_code_entry.pack(pady=5)
+
+    tk.Label(root, text="Phone number", font=("Arial", 12)).pack(pady=5)
+    phone_number_entry = tk.Entry(root)
+    phone_number_entry.pack(pady=5)
+
+    tk.Button(root, text="Submit", command=lambda: submit_driver_form(first_name_entry.get(), last_name_entry.get(), street_address_entry.get(), suburb_entry.get(), post_code_entry.get(), phone_number_entry.get())).pack(pady=10)
+
+    tk.Button(root, text="Back to Home", command=lambda: form_menu(root)).pack(pady=10, padx=10)
+
+def delivery_form(root):
+    for widget in root.winfo_children():
+        widget.destroy()
+
+    tk.Label(root, text="Delivery Form", font=("Arial", 16, "bold")).pack(pady=10)
+
+    tk.Label(root, text="Delivery Docket", font=("Arial", 12)).pack(pady=5)
+    delivery_docket_entry = tk.Entry(root)
+    delivery_docket_entry.pack(pady=5)
+
+    tk.Label(root, text="Collected From", font=("Arial", 12)).pack(pady=5)
+    collected_from_entry = tk.Entry(root)
+    collected_from_entry.pack(pady=5)
+
+    tk.Label(root, text="Date Collected (DD/MM/YYYY)", font=("Arial", 12)).pack(pady=5)
+    date_collected_entry = tk.Entry(root)
+    date_collected_entry.pack(pady=5)
+
+    tk.Label(root, text="Weight (KG)", font=("Arial", 12)).pack(pady=5)
+    weight_entry = tk.Entry(root)
+    weight_entry.pack(pady=5)
+
+    tk.Label(root, text="Deliver To", font=("Arial", 12)).pack(pady=5)
+    deliver_to_entry = tk.Entry(root)
+    deliver_to_entry.pack(pady=5)
+
+    tk.Label(root, text="Date Delivered (DD/MM/YYYY)", font=("Arial", 12)).pack(pady=5)
+    date_delivered_entry = tk.Entry(root)
+    date_delivered_entry.pack(pady=5)
+
+    tk.Label(root, text="Customer ID", font=("Arial", 12)).pack(pady=5)
+    customer_id_entry = tk.Entry(root)
+    customer_id_entry.pack(pady=5)
+
+    tk.Label(root, text="Driver ID", font=("Arial", 12)).pack(pady=5)
+    driver_id_entry = tk.Entry(root)
+    driver_id_entry.pack(pady=5)
+
+    tk.Button(root, text="Submit", command=lambda: submit_delivery_form(delivery_docket_entry.get(), collected_from_entry.get(), date_collected_entry.get(), weight_entry.get(), deliver_to_entry.get(), date_delivered_entry.get(), customer_id_entry.get(), driver_id_entry.get())).pack(pady=10)
+
+    tk.Button(root, text="Back to Home", command=lambda: form_menu(root)).pack(pady=10, padx=10)
+
+
 def form_menu(root):
     for widget in root.winfo_children():
         widget.destroy()
@@ -335,7 +500,6 @@ def form_menu(root):
     tk.Button(root, text="New Customer", command=lambda: customer_form(root)).pack(pady=10)
     tk.Button(root, text="New Driver", command=lambda: driver_form(root)).pack(pady=10)
     tk.Button(root, text="New Delivery", command=lambda: delivery_form(root)).pack(pady=10)
-    tk.Button(root, text="New User", command=lambda: user_form(root)).pack(pady=10)
 
     tk.Button(root, text="Back to Home", command=lambda: show_intro_screen(root)).pack(pady=20, padx=10)
 
@@ -453,7 +617,7 @@ print("Starting app...")
 
 root = tk.Tk()
 root.title("Delivery Database")
-root.geometry("800x600")
+root.geometry("800x650")
 
 login_menu(root)
 
